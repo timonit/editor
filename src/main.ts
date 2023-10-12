@@ -24,7 +24,6 @@ self.MonacoEnvironment = {
   }
 }
 
-
 const app = createApp(App)
 
 app.use(createPinia())
