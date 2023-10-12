@@ -2,23 +2,28 @@
 import { editor } from 'monaco-editor';
 import { ref, onMounted } from 'vue';
 
-
 const editorEl = ref<HTMLElement>();
+
+const props = defineProps<{value?: string}>();
+const emit = defineEmits<{(e: 'contentChanged', text: string): void}>()
 
 onMounted(() => {
   const codeEditor = editor.create(
+    // @ts-ignore
     editorEl.value,
     {
-      value: 'asdasd',
+      value: props.value,
       language: 'javascript',
       theme: 'vs-dark',
       automaticLayout: true,
       minimap:{
         enabled: false,
       },
-      tabCompletion: 'on'
     }
-  )
+  );
+  codeEditor.onDidChangeModelContent((event) => {
+    emit('contentChanged', codeEditor.getValue());
+  })
 })
 </script>
 
@@ -29,7 +34,7 @@ onMounted(() => {
 
 <style scoped>
 .editor {
-  width: 600px;
-  height: 600px;
+  width: 100%;
+  height: 100%;
 }
 </style>
