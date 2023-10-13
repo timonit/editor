@@ -7,6 +7,7 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
   state: (): FileStoreState => ({
     files: [],
     currentFileID: undefined,
+    isLoading: false,
   }),
   getters: {
     getCurrentFile(): AppFile | undefined {
@@ -48,6 +49,9 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
     },
     clearCurrentFile() {
       this.currentFileID = undefined;
+    },
+    setLoading(state: boolean) {
+      this.isLoading = state;
     },
   },
 })

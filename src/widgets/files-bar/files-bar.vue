@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {
   NMenu,
+  NSpin,
   NLayoutSider,
   NSpace,
 } from 'naive-ui';
 import { Document20Filled } from '@vicons/fluent';
 import { h } from 'vue';
 import { useFileStore } from '@/entities';
-import { CreateFile, DeleteFile, RenameFile } from '@/features';
+import { CreateFile, DeleteFile, LoadFile, RenameFile, LoadAll } from '@/features';
 
 const fileStore = useFileStore();
 </script>
@@ -21,21 +22,25 @@ const fileStore = useFileStore();
     show-trigger
   >
 
-    <NSpace item-style="display: flex" justify="end" :align="'center'" size="small" style="border-bottom: solid 1px gray">
-      <CreateFile />
-      <RenameFile />
-      <DeleteFile />
-    </NSpace>
+    <NSpin :show="fileStore.isLoading">
+      <NSpace item-style="display: flex" justify="end" :align="'center'" size="small" style="border-bottom: solid 1px gray">
+        <CreateFile />
+        <RenameFile />
+        <DeleteFile />
+        <LoadFile />
+        <LoadAll />
+      </NSpace>
 
-    <NMenu
-      :collapsed-width="32"
-      :options="fileStore.files"
-      key-field="id"
-      label-field="name"
-      :collapsed-icon-size="22"
-      :render-icon="() => h(Document20Filled)"
-      :value="fileStore.currentFileID"
-      @update:value="fileStore.selectFile"
-    />
+      <NMenu
+        :collapsed-width="32"
+        :options="fileStore.files"
+        key-field="id"
+        label-field="name"
+        :collapsed-icon-size="22"
+        :render-icon="() => h(Document20Filled)"
+        :value="fileStore.currentFileID"
+        @update:value="fileStore.selectFile"
+      />
+    </NSpin>
   </NLayoutSider>
 </template>

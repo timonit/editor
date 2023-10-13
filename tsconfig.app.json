@@ -6,6 +6,7 @@
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
+    "lib": ["ESNext"],
     "composite": true,
     "baseUrl": ".",
     "paths": {
