@@ -7,6 +7,7 @@ export interface FileStoreState {
    * Идентификатор текущий(открытый) файл
    */
   currentFileID?: AppFile['id'];
+  isLoading: boolean;
 }
 
 export interface FileStoreGetters extends _GettersTree<FileStoreState> {
@@ -50,4 +51,9 @@ export interface FileStoreActions {
    * Убирает идентификатор текущего(открытого) файл
    */
   clearCurrentFile(): void;
+  /**
+   * Устанавливает состояние загрузки
+   * @param state 
+   */
+  setLoading(state: boolean): void;
 }
