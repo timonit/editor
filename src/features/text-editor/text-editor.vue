@@ -1,43 +1,66 @@
 <script setup lang="ts">
+import { useFileStore, type AppFile } from '@/entities';
+import { throttle } from 'lodash';
 import { editor } from 'monaco-editor';
-import { ref, onMounted, onBeforeUpdate } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const editorEl = ref<HTMLElement>();
-
-const props = defineProps<{value: string | undefined}>();
-const emit = defineEmits<{(e: 'contentChanged', text: string): void}>()
-
+const fileStore = useFileStore();
 let codeEditor: editor.IStandaloneCodeEditor;
+
+/**
+ * Обработчик записи содержимого в стор.
+ */
+const changeContentHandler = throttle((id?: AppFile['id'], text?: string) => {
+  if (id) {
+    fileStore.changeFileData(id, text || '');
+  } else {
+    // если нет выделенного файла, создаем файл
+    if (text) {
+      // сохраняем позицию курсора(иначе при созданий файла курсор сбрасывается на 0)
+      const cursorPosition = codeEditor.getPosition();
+      // создаем и выделяем файл 
+      const newID = fileStore.createFile(`temp-${Date.now()}`, text);
+      fileStore.selectFile(newID);
+      // устанавливаем в новом файл курсор на прежнее места
+      if (cursorPosition) codeEditor.setPosition(cursorPosition);
+    }
+  }
+}, 500);
 
 onMounted(() => {
   codeEditor = editor.create(
     // @ts-ignore
     editorEl.value,
     {
-      value: props.value,
+      value: fileStore.getCurrentFile?.data || '',
       language: 'javascript',
       theme: 'vs-dark',
       automaticLayout: true,
-      minimap:{
-        enabled: false,
-      },
+      minimap: { enabled: false },
     }
   );
 
-  // Эмитим событие об изменений содержимого редактора.
-  codeEditor.onDidChangeModelContent((event) => {
-    emit('contentChanged', codeEditor.getValue());
+  codeEditor.onDidChangeModelContent(() => {
+    changeContentHandler(fileStore.currentFileID, codeEditor.getValue());
   })
-})
+});
 
-// обновляем редактор(не оптимизировано)
-onBeforeUpdate(() => {
-  // сохраняем позицию курсора
-  const position = codeEditor.getPosition();
-  // Устанавливаем новое значение в редактор при обновлений пропсов
-  codeEditor.setValue(props.value || '');
-  // Восстанавливаем позицию курсора. Иначе курсор сбрасывается в начальное положение.
-  if (position) codeEditor.setPosition(position);
+fileStore.$onAction((context) => {
+  switch(context.name) {
+    // меняем содержимое редактора при смене файла
+    case 'selectFile': {
+      context.after(() => {
+        if (fileStore.getCurrentFile) codeEditor.setValue(fileStore.getCurrentFile.data);
+      })
+      break;
+    }
+    // очищаем содержимое редактора при учистке выделенного файла
+    case 'clearCurrentFile': {
+      codeEditor.setValue('');
+      break;
+    }
+  }
 })
 </script>
 
