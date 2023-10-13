@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { useFileStore } from '@/entities/stores/file.store';
-import TextEditor from '@/features/text-editor/text-editor.vue';
-import FilesBar from '@/widgets/files-bar/files-bar.vue';
+import { useFileStore } from '@/entities';
+import { TextEditor } from '@/features';
+import { FilesBar } from '@/widgets';
 import { throttle } from 'lodash'
+import { NLayout, NLayoutContent } from 'naive-ui';
 
 const fileStore = useFileStore();
 const handler = throttle((text?: string) => {
   if (fileStore.currentFile) {
-    fileStore.changeFileData(fileStore.currentFile, text);
+    fileStore.changeFileData(fileStore.currentFile, text || '');
   } else {
     if (text) {
       const id = fileStore.createFile(`temp-${Date.now()}`, text);
@@ -18,16 +19,17 @@ const handler = throttle((text?: string) => {
 </script>
 
 <template>
-  <div class="wrapper">
+  <NLayout has-sider>
     <FilesBar />
-    <TextEditor @content-changed="handler" :value="fileStore.getCurrentFile?.data" />
-  </div>
+    <NLayoutContent>
+      <TextEditor @content-changed="handler" :value="fileStore.getCurrentFile?.data" />
+    </NLayoutContent>
+  </NLayout>
 </template>
 
 <style scoped>
-.wrapper {
+.n-layout {
   height: 100vh;
-  width: 100vw;
-  display: flex;
 }
 </style>
+@/entities/file/api/file.store

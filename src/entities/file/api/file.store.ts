@@ -1,12 +1,26 @@
-import { defineStore } from 'pinia'
-import type { AppFile } from '../file/types';
+import { defineStore, type _GettersTree } from 'pinia'
+import type { AppFile } from '../types';
 
-type FileStoreState = {
-  files: AppFile[],
+interface FileStoreState {
+  files: AppFile[];
   currentFile?: AppFile['id'];
 }
 
-export const useFileStore = defineStore<'files', FileStoreState>({
+interface FileStoreGetters extends _GettersTree<FileStoreState> {
+  getCurrentFile(): AppFile | undefined;
+}
+
+interface FileStoreActions {
+  createFile(name: string, data?: string): string;
+  renameFile(id: string, newName: string): void;
+  deleteFile(id: string): void;
+  changeFileData(id: string, data: string): void;
+  selectFile(id: string): void;
+  clearCurrentFile(): void;
+}
+
+
+export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetters, FileStoreActions>({
   id: 'files',
   state: (): FileStoreState => ({
     files: [],

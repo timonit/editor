@@ -1,1 +1,3 @@
-export * from './files-bar.vue';
+import FilesBar from './files-bar.vue';
+
+export { FilesBar }
