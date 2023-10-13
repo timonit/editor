@@ -34,9 +34,8 @@ const fileStore = useFileStore();
       label-field="name"
       :collapsed-icon-size="22"
       :render-icon="() => h(Document20Filled)"
-      :value="fileStore.currentFile"
+      :value="fileStore.currentFileID"
       @update:value="fileStore.selectFile"
     />
   </NLayoutSider>
 </template>
-@/entities/file/api/file.store

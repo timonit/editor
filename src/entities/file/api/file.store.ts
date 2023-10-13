@@ -1,34 +1,16 @@
-import { defineStore, type _GettersTree } from 'pinia'
+import { defineStore } from 'pinia'
 import type { AppFile } from '../types';
-
-interface FileStoreState {
-  files: AppFile[];
-  currentFile?: AppFile['id'];
-}
-
-interface FileStoreGetters extends _GettersTree<FileStoreState> {
-  getCurrentFile(): AppFile | undefined;
-}
-
-interface FileStoreActions {
-  createFile(name: string, data?: string): string;
-  renameFile(id: string, newName: string): void;
-  deleteFile(id: string): void;
-  changeFileData(id: string, data: string): void;
-  selectFile(id: string): void;
-  clearCurrentFile(): void;
-}
-
+import type { FileStoreState, FileStoreGetters, FileStoreActions } from './types';
 
 export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetters, FileStoreActions>({
   id: 'files',
   state: (): FileStoreState => ({
     files: [],
-    currentFile: undefined,
+    currentFileID: undefined,
   }),
   getters: {
     getCurrentFile(): AppFile | undefined {
-      return this.files.find(file => file.id === this.currentFile);
+      return this.files.find(file => file.id === this.currentFileID);
     }
   },
   actions: {
@@ -52,7 +34,7 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
       this.files[i].name = newName;
     },
     deleteFile(id: string) {
-      if (this.currentFile === id) this.clearCurrentFile();
+      if (this.currentFileID === id) this.clearCurrentFile();
       this.files = this.files.filter(el => el.id !== id);
     },
     changeFileData(id: string, data: string) {
@@ -62,10 +44,10 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
       this.files[i].data = data;
     },
     selectFile(id: string) {
-      this.currentFile = id;
+      this.currentFileID = id;
     },
     clearCurrentFile() {
-      this.currentFile = undefined;
+      this.currentFileID = undefined;
     },
   },
 })
