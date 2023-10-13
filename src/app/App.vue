@@ -1,22 +1,36 @@
 <script setup lang="ts">
-import TextEditor from '@/features/text-editor/text-editor.vue';
+import { useFileStore } from '@/entities';
+import { TextEditor } from '@/features';
+import { FilesBar } from '@/widgets';
+import { throttle } from 'lodash'
+import { NLayout, NLayoutContent, NMessageProvider } from 'naive-ui';
 
-const saved = localStorage.getItem('save');
-
-const handler = (text: string) => {
-  localStorage.setItem('save', text);
-}
+const fileStore = useFileStore();
+const handler = throttle((text?: string) => {
+  if (fileStore.currentFile) {
+    fileStore.changeFileData(fileStore.currentFile, text || '');
+  } else {
+    if (text) {
+      const id = fileStore.createFile(`temp-${Date.now()}`, text);
+      fileStore.selectFile(id);
+    }
+  }
+}, 700);
 </script>
 
 <template>
-  <div class="wrapper">
-    <TextEditor @content-changed="handler" :value="saved || ''" />
-  </div>
+  <NLayout has-sider>
+    <NMessageProvider>
+      <FilesBar />
+      <NLayoutContent>
+        <TextEditor @content-changed="handler" :value="fileStore.getCurrentFile?.data" />
+      </NLayoutContent>
+    </NMessageProvider>
+  </NLayout>
 </template>
 
 <style scoped>
-.wrapper {
+.n-layout {
   height: 100vh;
-  width: 100vw;
 }
 </style>

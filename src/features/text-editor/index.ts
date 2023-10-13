@@ -1,3 +1,3 @@
-import textEditorVue from './text-editor.vue';
+import TextEditor from './text-editor.vue';
 
-export { textEditorVue };
+export { TextEditor };

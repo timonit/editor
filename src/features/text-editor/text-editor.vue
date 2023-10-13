@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { editor } from 'monaco-editor';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUpdate } from 'vue';
 
 const editorEl = ref<HTMLElement>();
 
-const props = defineProps<{value?: string}>();
+const props = defineProps<{value: string | undefined}>();
 const emit = defineEmits<{(e: 'contentChanged', text: string): void}>()
 
+let codeEditor: editor.IStandaloneCodeEditor;
+
 onMounted(() => {
-  const codeEditor = editor.create(
+  codeEditor = editor.create(
     // @ts-ignore
     editorEl.value,
     {
@@ -21,9 +23,16 @@ onMounted(() => {
       },
     }
   );
+
   codeEditor.onDidChangeModelContent((event) => {
     emit('contentChanged', codeEditor.getValue());
   })
+})
+
+onBeforeUpdate(() => {
+  const position = codeEditor.getPosition();
+  codeEditor.setValue(props.value || '');
+  if (position) codeEditor.setPosition(position);
 })
 </script>
 
