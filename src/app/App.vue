@@ -15,8 +15,8 @@ import {
 const fileStore = useFileStore();
 
 const changeContentHandler = throttle((text?: string) => {
-  if (fileStore.currentFile) {
-    fileStore.changeFileData(fileStore.currentFile, text || '');
+  if (fileStore.currentFileID) {
+    fileStore.changeFileData(fileStore.currentFileID, text || '');
   } else {
     if (text) {
       const id = fileStore.createFile(`temp-${Date.now()}`, text);

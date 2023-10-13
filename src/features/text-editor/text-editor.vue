@@ -24,14 +24,19 @@ onMounted(() => {
     }
   );
 
+  // Эмитим событие об изменений содержимого редактора.
   codeEditor.onDidChangeModelContent((event) => {
     emit('contentChanged', codeEditor.getValue());
   })
 })
 
+// обновляем редактор(не оптимизировано)
 onBeforeUpdate(() => {
+  // сохраняем позицию курсора
   const position = codeEditor.getPosition();
+  // Устанавливаем новое значение в редактор при обновлений пропсов
   codeEditor.setValue(props.value || '');
+  // Восстанавливаем позицию курсора. Иначе курсор сбрасывается в начальное положение.
   if (position) codeEditor.setPosition(position);
 })
 </script>

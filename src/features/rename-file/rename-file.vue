@@ -7,7 +7,6 @@ import {
   NModal,
   NInput,
   NInputGroup,
-  NFormItem,
 } from 'naive-ui';
 import {
   DocumentEdit20Filled,
@@ -22,20 +21,24 @@ const message = useMessage();
 const name = ref<string>(fileStore.getCurrentFile?.name || '');
 
 const openModal = () => {
-  if (fileStore.currentFile) {
+  if (fileStore.currentFileID) {
     modalShow.value = true;
+    // Устанавливаем в поле имя открытого файла
     name.value = fileStore.getCurrentFile?.name || '';
   } else {
+    // если нет текущего файла выбросить ошибко о отсутствии выделеного файла
     message.error('You need select a file');
   }
 };
 
 const renameFile = () => {
   modalShow.value = false;
-  if (!fileStore.currentFile) return message.error('File not found');
+  // если нет текущего файла выбросить ошибко о отсутствии выделеного файла
+  if (!fileStore.currentFileID) return message.error('File not found');
+  // Вывести ошибку о пустом имени файла
   if (!name.value) return message.error('Name should not be empty');
 
-  fileStore.renameFile(fileStore.currentFile, name.value);
+  fileStore.renameFile(fileStore.currentFileID, name.value);
 };
 </script>
 

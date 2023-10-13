@@ -12,7 +12,7 @@ import { useFileStore } from '@/entities';
 const fileStore = useFileStore();
 
 const deleteFile = () => {
-  fileStore.deleteFile(fileStore.currentFile);
+  if (fileStore.currentFileID) fileStore.deleteFile(fileStore.currentFileID);
 }
 </script>
 

@@ -20,14 +20,16 @@ const modalShow = ref(false);
 const message = useMessage();
 const name = ref<string>('');
 
-const openModal = () => {
-  modalShow.value = true;
-};
+const openModal = () => (modalShow.value = true);
 
 const createFile = () => {
   if (!name.value) return message.error('Name should not be empty');
+  // Создаем файл
   const id = fileStore.createFile(name.value);
+  // Выделяем файл
   fileStore.selectFile(id);
+
+  // Закрываем модалку и очищаем поле
   modalShow.value = false;
   name.value = '';
 }

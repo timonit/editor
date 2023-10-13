@@ -3,19 +3,52 @@ import type { AppFile } from '../types';
 
 interface FileStoreState {
   files: AppFile[];
-  currentFile?: AppFile['id'];
+  /**
+   * Идентификатор текущий(открытый) файл
+   */
+  currentFileID?: AppFile['id'];
 }
 
 interface FileStoreGetters extends _GettersTree<FileStoreState> {
+  /**
+   * Возвращает текущий(открытый) файл
+   */
   getCurrentFile(): AppFile | undefined;
 }
 
 interface FileStoreActions {
+  /**
+   * Добавляет файл с именем.
+   * @param name - Имя файла
+   * @param data - Содержимое файла
+   * @return - Идентификатор файла
+   */
   createFile(name: string, data?: string): string;
+  /**
+   * Переименовать файл
+   * @param id - Идентификатор файла
+   * @param newName - Новое имя файла
+   */
   renameFile(id: string, newName: string): void;
+  /**
+   * Удаляет файл
+   * @param id - Идентификатор файла
+   */
   deleteFile(id: string): void;
+  /**
+   * Изменить содержимое файла
+   * @param id - Идентификатор файла
+   * @param data - Содержимое файла
+   */
   changeFileData(id: string, data: string): void;
+  /**
+   * Устанавливает идентификатор текущего(открытого) файла
+   * @param id - Идентификатор файла
+   */
   selectFile(id: string): void;
+  /**
+   * Убирает идентификатор текущего(открытого) файл
+   */
   clearCurrentFile(): void;
 }
 
@@ -24,11 +57,11 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
   id: 'files',
   state: (): FileStoreState => ({
     files: [],
-    currentFile: undefined,
+    currentFileID: undefined,
   }),
   getters: {
     getCurrentFile(): AppFile | undefined {
-      return this.files.find(file => file.id === this.currentFile);
+      return this.files.find(file => file.id === this.currentFileID);
     }
   },
   actions: {
@@ -52,7 +85,7 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
       this.files[i].name = newName;
     },
     deleteFile(id: string) {
-      if (this.currentFile === id) this.clearCurrentFile();
+      if (this.currentFileID === id) this.clearCurrentFile();
       this.files = this.files.filter(el => el.id !== id);
     },
     changeFileData(id: string, data: string) {
@@ -62,10 +95,10 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
       this.files[i].data = data;
     },
     selectFile(id: string) {
-      this.currentFile = id;
+      this.currentFileID = id;
     },
     clearCurrentFile() {
-      this.currentFile = undefined;
+      this.currentFileID = undefined;
     },
   },
 })
