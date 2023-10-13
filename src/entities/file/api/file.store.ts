@@ -39,7 +39,7 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
         name,
         id,
         lastModified: date.getTime(),
-        data: data || id,
+        data: data || '',
         type: 'plain/text',
       }
       this.files = [...this.files, file];

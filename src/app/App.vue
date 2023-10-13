@@ -3,7 +3,7 @@ import { useFileStore } from '@/entities';
 import { TextEditor } from '@/features';
 import { FilesBar } from '@/widgets';
 import { throttle } from 'lodash'
-import { NLayout, NLayoutContent } from 'naive-ui';
+import { NLayout, NLayoutContent, NMessageProvider } from 'naive-ui';
 
 const fileStore = useFileStore();
 const handler = throttle((text?: string) => {
@@ -20,10 +20,12 @@ const handler = throttle((text?: string) => {
 
 <template>
   <NLayout has-sider>
-    <FilesBar />
-    <NLayoutContent>
-      <TextEditor @content-changed="handler" :value="fileStore.getCurrentFile?.data" />
-    </NLayoutContent>
+    <NMessageProvider>
+      <FilesBar />
+      <NLayoutContent>
+        <TextEditor @content-changed="handler" :value="fileStore.getCurrentFile?.data" />
+      </NLayoutContent>
+    </NMessageProvider>
   </NLayout>
 </template>
 
@@ -32,4 +34,3 @@ const handler = throttle((text?: string) => {
   height: 100vh;
 }
 </style>
-@/entities/file/api/file.store
