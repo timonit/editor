@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { AppFile } from '../types';
 import type { FileStoreState, FileStoreGetters, FileStoreActions } from './types';
+import { convertToAppFile } from '@/shared';
 
 export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetters, FileStoreActions>({
   id: 'files',
@@ -15,6 +16,10 @@ export const useFileStore = defineStore<'files', FileStoreState, FileStoreGetter
     }
   },
   actions: {
+    async addNativeFiles(files: File[]): Promise<void> {
+      const appFiles = await Promise.all(files.map((f) => convertToAppFile(f)));
+      this.files = [...this.files, ...appFiles];
+    },
     createFile(name: string, data?: string): string {
       const date = new Date();
       const id = `${String(date.getTime())}${(Math.random()*1000).toFixed()}`;
