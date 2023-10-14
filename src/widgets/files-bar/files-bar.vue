@@ -8,7 +8,14 @@ import {
 import { Document20Filled } from '@vicons/fluent';
 import { h } from 'vue';
 import { useFileStore } from '@/entities';
-import { CreateFile, DeleteFile, LoadFile, RenameFile, LoadAll } from '@/features';
+import {
+  CreateFile,
+  DeleteFile,
+  LoadFile,
+  RenameFile,
+  LoadAll,
+  UploadFile,
+} from '@/features';
 
 const fileStore = useFileStore();
 </script>
@@ -29,6 +36,7 @@ const fileStore = useFileStore();
         <DeleteFile />
         <LoadFile />
         <LoadAll />
+        <UploadFile />
       </NSpace>
 
       <NMenu

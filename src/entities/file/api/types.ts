@@ -19,12 +19,17 @@ export interface FileStoreGetters extends _GettersTree<FileStoreState> {
 
 export interface FileStoreActions {
   /**
-   * Добавляет файл с именем.
+   * Создает файл с именем.
    * @param name - Имя файла
    * @param data - Содержимое файла
    * @return - Идентификатор файла
    */
   createFile(name: string, data?: string): string;
+  /**
+   * Добавляет несколько файлов c файловой системы пользователя
+   * @param files
+   */
+  addNativeFiles(files: File[]): Promise<void>;
   /**
    * Переименовать файл
    * @param id - Идентификатор файла

@@ -5,3 +5,4 @@ export * from './delete-file';
 export * from './files-autosave';
 export * from './load-file';
 export * from './load-all';
+export * from './upload-file';

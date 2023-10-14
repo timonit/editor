@@ -15,6 +15,6 @@ export function filesAutosave(context: PiniaPluginContext): void {
     
     // востанавливаем состояние из локального хранилища
     const saved = localStorage.getItem(`${context.store.$id}-store`);
-    if (saved) return JSON.parse(saved);
+    if (saved) return { ...JSON.parse(saved), isLoading: false};
   }
 }
